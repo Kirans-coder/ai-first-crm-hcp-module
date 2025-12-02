@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+pydantic
+python-dotenv
+psycopg2-binary      # or mysqlclient if you use MySQL
+groq
+langgraph
+langchain-core
+langchain-community

@@ -1,0 +1,44 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: crm_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: crm_user
+      POSTGRES_PASSWORD: crm_password
+      POSTGRES_DB: hcp_crm
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+    container_name: crm_backend
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgresql://crm_user:crm_password@postgres:5432/hcp_crm
+      GROQ_API_KEY: YOUR_GROQ_API_KEY
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: crm_frontend
+    restart: always
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+    command: ["npm", "run", "dev"]
+
+volumes:
+  postgres_data:
